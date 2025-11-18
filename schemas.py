@@ -11,8 +11,8 @@ Model name is converted to lowercase for the collection name:
 - BlogPost -> "blogs" collection
 """
 
-from pydantic import BaseModel, Field
-from typing import Optional
+from pydantic import BaseModel, Field, EmailStr
+from typing import Optional, List
 
 # Example schemas (replace with your own):
 
@@ -22,7 +22,7 @@ class User(BaseModel):
     Collection name: "user" (lowercase of class name)
     """
     name: str = Field(..., description="Full name")
-    email: str = Field(..., description="Email address")
+    email: EmailStr = Field(..., description="Email address")
     address: str = Field(..., description="Address")
     age: Optional[int] = Field(None, ge=0, le=120, description="Age in years")
     is_active: bool = Field(True, description="Whether user is active")
@@ -37,6 +37,34 @@ class Product(BaseModel):
     price: float = Field(..., ge=0, description="Price in dollars")
     category: str = Field(..., description="Product category")
     in_stock: bool = Field(True, description="Whether product is in stock")
+
+# -----------------------------------------------------------------
+# IT Services Website Schemas
+# -----------------------------------------------------------------
+
+class Service(BaseModel):
+    """Represents an IT service offering
+    Collection name: "service"
+    """
+    title: str = Field(..., description="Service title, e.g., Web Development")
+    description: str = Field(..., description="Short description of the service")
+    category: str = Field(..., description="Category like Development, Cloud, Security")
+    features: List[str] = Field(default_factory=list, description="Key features/bullets")
+    starting_price: Optional[float] = Field(None, ge=0, description="Starting price if applicable")
+    icon: Optional[str] = Field(None, description="Frontend icon key")
+
+class Inquiry(BaseModel):
+    """Represents a lead/contact request from website
+    Collection name: "inquiry"
+    """
+    name: str = Field(..., description="Contact person name")
+    email: EmailStr = Field(..., description="Contact email")
+    company: Optional[str] = Field(None, description="Company name")
+    phone: Optional[str] = Field(None, description="Phone number")
+    service_type: Optional[str] = Field(None, description="Requested service type")
+    message: str = Field(..., description="Message or project brief")
+    budget_range: Optional[str] = Field(None, description="Budget range text, e.g., <$1k, $1k-$5k")
+    source: Optional[str] = Field(None, description="Where they heard about us")
 
 # Add your own schemas here:
 # --------------------------------------------------
